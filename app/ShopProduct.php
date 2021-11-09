@@ -3,13 +3,16 @@
 use BookProduct\BookProduct;
 use CDProduct\CDProduct;
 use Writer\ShopProductWriter;
+use PDO;
 
 class ShopProduct
 
 {
+    static $pdo;
+    private $id = 0;
     private $title = "Standart product";
     private $producerMainName = "Author surname";
-    private $producerFirstName = "Author surname";
+    private $producerFirstName = "Author name";
     private $price = 0;
     private $discount = 1;
 
@@ -19,6 +22,70 @@ class ShopProduct
         $this->producerMainName = $mainName;
         $this->producerFirstName = $firstName;
         $this->price = $price;
+    }
+
+    public static function connect_db()
+    {
+
+        $host = '127.0.0.1';
+        $db   = 'shop_products';
+        $user = 'root';
+        $pass = '';
+        $charset = 'utf8mb4';
+        $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+        $options = [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+        ];
+        self::$pdo = new PDO($dsn, $user, $pass, $options);
+    }
+
+    public static function getInstance($id)
+    {
+
+        self::connect_db();
+        $stmt = self::$pdo->prepare("select * from products where id=?");
+        $result = $stmt->execute([$id]);
+
+        $row = $stmt->fetch();
+
+        if (empty($row)) {
+            return null;
+        }
+
+        if ($row['type'] === 'book') {
+            $product = new BookProduct(
+                $row['title'],
+                $row['firstname'],
+                $row['mainname'],
+                $row['price'],
+                $row['numpages']
+            );
+        } elseif ($row['type'] === 'cd') {
+            $product = new CDProduct(
+                $row['title'],
+                $row['firstname'],
+                $row['mainname'],
+                $row['price'],
+                $row['playlength'],
+            );
+        } else {
+            $product = new ShopProduct(
+                $row['title'],
+                $row['firstname'],
+                $row['mainname'],
+                $row['price'],
+            );
+        }
+        $product->setId($row['id']);
+        $product->setDiscount($row['discount']);
+        return $product;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     public function getTitle()
@@ -43,7 +110,7 @@ class ShopProduct
 
     public function setDiscount($num)
     {
-        return $this->discount = $num;
+        $this->discount = $num;
     }
 
 
@@ -64,8 +131,18 @@ class ShopProduct
     }
 }
 
-$product1 = new CDProduct("Cheap thrills", "Sia", "", 15.99, null, 60.23);
-$product2 = new BookProduct("Andromeda", "Ivan", "Efremov", 10.25, 520, null);
+
+$obj = ShopProduct::getInstance(1);
+print($obj->getTitle());
+
+
+
+
+
+
+
+// $product1 = new CDProduct("Cheap thrills", "Sia", "", 15.99, null, 60.23);
+// $product2 = new BookProduct("Andromeda", "Ivan", "Efremov", 10.25, 520, null);
 
 
 // print($product1->getPlayLength() . '<br>');
@@ -74,9 +151,9 @@ $product2 = new BookProduct("Andromeda", "Ivan", "Efremov", 10.25, 520, null);
 // print($product2->getPrice());
 
 
-$w = new ShopProductWriter;
-$w->addProduct($product2);
-$w->addProduct($product1);
+// $w = new ShopProductWriter;
+// $w->addProduct($product2);
+// $w->addProduct($product1);
 
-// var_dump($w);
-$w->write();
+// // var_dump($w);
+// $w->write();
