@@ -7,7 +7,7 @@ use ShopProduct;
 
 class ShopProductWriter
 {
-    private $products = [];
+    protected $products = [];
 
     public function addProduct(ShopProduct $shopProduct)
     {
@@ -17,7 +17,6 @@ class ShopProductWriter
     public function write()
     {
         $str = '';
-
         foreach ($this->products as $shopProduct) {
             $str = $shopProduct->getSummaryLine() . "<br>";
             print $str;

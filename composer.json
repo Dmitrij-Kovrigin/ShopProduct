@@ -2,7 +2,11 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "Writer\\": "app/"
+            "Writer\\": "app/",
+            "BookProduct\\": "app/",
+            "CDProduct\\": "app/",
+            "Xml\\": "app/",
+            "PriceTaxing\\": "app/traits/"
         }
     }
 }

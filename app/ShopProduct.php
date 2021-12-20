@@ -2,12 +2,14 @@
 
 use BookProduct\BookProduct;
 use CDProduct\CDProduct;
+use PriceTaxing\PriceTaxing;
 use Writer\ShopProductWriter;
-use PDO;
+use Xml\XmlProductWriter;
 
 class ShopProduct
 
 {
+    use PriceTaxing;
     static $pdo;
     private $id = 0;
     private $title = "Standart product";
@@ -26,7 +28,6 @@ class ShopProduct
 
     public static function connect_db()
     {
-
         $host = '127.0.0.1';
         $db   = 'shop_products';
         $user = 'root';
@@ -43,7 +44,6 @@ class ShopProduct
 
     public static function getInstance($id)
     {
-
         self::connect_db();
         $stmt = self::$pdo->prepare("select * from products where id=?");
         $result = $stmt->execute([$id]);
@@ -113,7 +113,6 @@ class ShopProduct
         $this->discount = $num;
     }
 
-
     public function getSummaryLine()
     {
         $base = "$this->title, Author: $this->producerFirstName $this->producerMainName";
@@ -134,7 +133,11 @@ class ShopProduct
 
 $obj = ShopProduct::getInstance(1);
 print($obj->getTitle());
-
+print($obj->getDiscount());
+$w = new XmlProductWriter;
+$w->addProduct($obj);
+$w->write();
+print($obj->calculateTax($obj->getPrice()));
 
 
 

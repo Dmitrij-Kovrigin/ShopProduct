@@ -1,6 +1,6 @@
 <?php
 
-namespace Bookproduct;
+namespace BookProduct;
 
 use ShopProduct;
 use Writer\ShopProductWriter;
