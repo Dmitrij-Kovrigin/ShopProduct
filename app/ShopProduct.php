@@ -2,6 +2,7 @@
 
 use BookProduct\BookProduct;
 use CDProduct\CDProduct;
+use IdentityTrait\IdentityTrait;
 use PriceTaxing\PriceTaxing;
 use Writer\ShopProductWriter;
 use Xml\XmlProductWriter;
@@ -9,7 +10,9 @@ use Xml\XmlProductWriter;
 class ShopProduct
 
 {
-    use PriceTaxing;
+    use PriceTaxing, IdentityTrait {
+        IdentityTrait::generateId as uniqueId;
+    }
     static $pdo;
     private $id = 0;
     private $title = "Standart product";
@@ -17,6 +20,7 @@ class ShopProduct
     private $producerFirstName = "Author name";
     private $price = 0;
     private $discount = 1;
+    private $taxRate = 15;
 
     function __construct($title, $firstName, $mainName, $price)
     {
@@ -93,6 +97,11 @@ class ShopProduct
         return $this->title;
     }
 
+    public function getTaxRate()
+    {
+        return $this->taxRate;
+    }
+
     public function getproducerMainName()
     {
         return $this->producerMainName;
@@ -106,6 +115,11 @@ class ShopProduct
     public function getDiscount()
     {
         return $this->discount;
+    }
+
+    public function getFinalPrice()
+    {
+        return $this->price + $this->calculateTax($this->price);
     }
 
     public function setDiscount($num)
@@ -131,18 +145,16 @@ class ShopProduct
 }
 
 
-$obj = ShopProduct::getInstance(1);
-print($obj->getTitle());
-print($obj->getDiscount());
-$w = new XmlProductWriter;
-$w->addProduct($obj);
-$w->write();
-print($obj->calculateTax($obj->getPrice()));
+// $obj = ShopProduct::getInstance(1);
+// print($obj->getTitle());
+// print($obj->getDiscount());
+// $w = new XmlProductWriter;
+// $w->addProduct($obj);
+// $w->write();
+// print($obj->getFinalPrice());
 
 
-
-
-
+// print($obj->uniqueId());
 
 // $product1 = new CDProduct("Cheap thrills", "Sia", "", 15.99, null, 60.23);
 // $product2 = new BookProduct("Andromeda", "Ivan", "Efremov", 10.25, 520, null);

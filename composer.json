@@ -6,7 +6,8 @@
             "BookProduct\\": "app/",
             "CDProduct\\": "app/",
             "Xml\\": "app/",
-            "PriceTaxing\\": "app/traits/"
+            "PriceTaxing\\": "app/traits/",
+            "IdentityTrait\\": "app/traits/"
         }
     }
 }

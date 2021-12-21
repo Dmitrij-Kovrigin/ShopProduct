@@ -19,6 +19,10 @@ class ComposerStaticInit2b0e8b6800a3896435ceaf2f10862871
         array (
             'PriceTaxing\\' => 12,
         ),
+        'I' => 
+        array (
+            'IdentityTrait\\' => 14,
+        ),
         'C' => 
         array (
             'CDProduct\\' => 10,
@@ -43,6 +47,10 @@ class ComposerStaticInit2b0e8b6800a3896435ceaf2f10862871
             0 => __DIR__ . '/../..' . '/app',
         ),
         'PriceTaxing\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/traits',
+        ),
+        'IdentityTrait\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app/traits',
         ),
